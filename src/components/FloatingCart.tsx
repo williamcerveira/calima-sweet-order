@@ -1,33 +1,24 @@
 import { ShoppingBag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import type { CartItem } from '@/hooks/useCart';
 
 interface Props {
   items: CartItem[];
-  total: number;
   onClick: () => void;
 }
 
-function formatBRL(v: number) {
-  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-export default function FloatingCart({ items, total, onClick }: Props) {
+export default function FloatingCart({ items, onClick }: Props) {
   if (items.length === 0) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slide-up">
-      <Button
-        onClick={onClick}
-        className="w-full max-w-md mx-auto flex items-center justify-between rounded-2xl shadow-lg h-14 px-5"
-        size="lg"
-      >
-        <span className="flex items-center gap-2">
-          <ShoppingBag className="w-5 h-5" />
-          <span className="font-semibold">{items.length} {items.length === 1 ? 'item' : 'itens'}</span>
-        </span>
-        <span className="font-bold text-lg">{formatBRL(total)}</span>
-      </Button>
-    </div>
+    <button
+      onClick={onClick}
+      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+      aria-label="Ver carrinho"
+    >
+      <ShoppingBag className="w-6 h-6" />
+      <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-foreground text-background text-xs font-bold flex items-center justify-center">
+        {items.length}
+      </span>
+    </button>
   );
 }

@@ -1,27 +1,60 @@
 import { useState } from 'react';
-import Header from '@/components/Header';
-import InfoAccordions from '@/components/InfoAccordions';
-import CategoryNav from '@/components/CategoryNav';
+import HeroSection from '@/components/HeroSection';
+import InfoSection from '@/components/InfoSection';
+import VitrineSection from '@/components/VitrineSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import Footer from '@/components/Footer';
 import CakeModal from '@/components/CakeModal';
-import SweetsSection from '@/components/SweetsSection';
+import SweetModal from '@/components/SweetModal';
 import FloatingCart from '@/components/FloatingCart';
 import CheckoutSheet from '@/components/CheckoutSheet';
-import { Button } from '@/components/ui/button';
 import { useCart, type CartSweetItem } from '@/hooks/useCart';
 import type { CakeConfig } from '@/hooks/useCakePrice';
-import type { CakeType } from '@/data/menu-data';
-import { Cake, ChefHat } from 'lucide-react';
+import type { ProductCard } from '@/data/menu-data';
+import { SWEET_CATEGORIES } from '@/data/menu-data';
+
+import cardBolo from '@/assets/card-bolo.jpg';
+import cardAcetato from '@/assets/card-acetato.jpg';
+import cardBrigadeiros from '@/assets/card-brigadeiros.jpg';
+import cardDocesFinos from '@/assets/card-doces-finos.jpg';
+import cardTrufas from '@/assets/card-trufas.jpg';
+
+const IMAGE_MAP: Record<string, string> = {
+  'card-bolo': cardBolo,
+  'card-acetato': cardAcetato,
+  'card-brigadeiros': cardBrigadeiros,
+  'card-doces-finos': cardDocesFinos,
+  'card-trufas': cardTrufas,
+};
 
 export default function Index() {
-  const [activeCategory, setActiveCategory] = useState('cakes');
   const [cakeModalOpen, setCakeModalOpen] = useState(false);
-  const [cakeType, setCakeType] = useState<CakeType>('traditional');
+  const [cakeType, setCakeType] = useState<'traditional' | 'acetate'>('traditional');
+  const [cakeImage, setCakeImage] = useState('');
+
+  const [sweetModalOpen, setSweetModalOpen] = useState(false);
+  const [sweetCatIndex, setSweetCatIndex] = useState(0);
+  const [sweetImage, setSweetImage] = useState('');
+
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const cart = useCart();
 
-  const openCakeModal = (type: CakeType) => {
-    setCakeType(type);
-    setCakeModalOpen(true);
+  const handleOpenProduct = (product: ProductCard) => {
+    const img = IMAGE_MAP[product.image] || '';
+
+    if (product.modalType === 'cake-traditional') {
+      setCakeType('traditional');
+      setCakeImage(img);
+      setCakeModalOpen(true);
+    } else if (product.modalType === 'cake-acetate') {
+      setCakeType('acetate');
+      setCakeImage(img);
+      setCakeModalOpen(true);
+    } else if (product.modalType === 'sweet' && product.sweetCategoryIndex !== undefined) {
+      setSweetCatIndex(product.sweetCategoryIndex);
+      setSweetImage(img);
+      setSweetModalOpen(true);
+    }
   };
 
   const handleCakeAdd = (config: CakeConfig, summary: string, total: number) => {
@@ -40,57 +73,30 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen pb-24 font-body">
-      <Header />
-      <InfoAccordions />
-      <CategoryNav activeCategory={activeCategory} onSelect={setActiveCategory} />
-
-      <main className="container">
-        {activeCategory === 'cakes' && (
-          <div className="space-y-3">
-            <button
-              onClick={() => openCakeModal('traditional')}
-              className="w-full bg-card border rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition-shadow"
-            >
-              <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center shrink-0">
-                <Cake className="w-7 h-7 text-primary" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-semibold">Bolo Personalizado</h3>
-                <p className="text-sm text-muted-foreground">Tradicional, Especial ou Premium — a partir de R$ 70/kg</p>
-              </div>
-            </button>
-          </div>
-        )}
-
-        {activeCategory === 'acetate' && (
-          <div className="space-y-3">
-            <button
-              onClick={() => openCakeModal('acetate')}
-              className="w-full bg-card border rounded-xl p-5 flex items-center gap-4 hover:shadow-md transition-shadow"
-            >
-              <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center shrink-0">
-                <ChefHat className="w-7 h-7 text-primary" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-semibold">Bolo no Acetato</h3>
-                <p className="text-sm text-muted-foreground">R$ 110/kg — opção de Nutella</p>
-              </div>
-            </button>
-          </div>
-        )}
-
-        {activeCategory === 'sweets' && <SweetsSection onAdd={handleSweetAdd} />}
-      </main>
+    <div className="min-h-screen font-body">
+      <HeroSection />
+      <InfoSection />
+      <VitrineSection onOpenProduct={handleOpenProduct} />
+      <TestimonialsSection />
+      <Footer />
 
       <CakeModal
         open={cakeModalOpen}
         onClose={() => setCakeModalOpen(false)}
         cakeType={cakeType}
+        image={cakeImage}
         onAdd={handleCakeAdd}
       />
 
-      <FloatingCart items={cart.items} total={cart.total} onClick={() => setCheckoutOpen(true)} />
+      <SweetModal
+        open={sweetModalOpen}
+        onClose={() => setSweetModalOpen(false)}
+        category={SWEET_CATEGORIES[sweetCatIndex] || null}
+        image={sweetImage}
+        onAdd={handleSweetAdd}
+      />
+
+      <FloatingCart items={cart.items} onClick={() => setCheckoutOpen(true)} />
 
       <CheckoutSheet
         open={checkoutOpen}
