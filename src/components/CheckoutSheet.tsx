@@ -3,7 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Send } from 'lucide-react';
+import { Trash2, Send, ShoppingBag } from 'lucide-react';
 import type { CartItem } from '@/hooks/useCart';
 
 interface Props {
@@ -29,17 +29,16 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
   const canSubmit = name.trim() && date && payment && items.length > 0;
 
   const buildMessage = () => {
-    let msg = `🎂 *Pedido — Calima Confeitaria*\n\n`;
+    let msg = `Olá Ana! Quero fazer uma encomenda:\n\n`;
     msg += `👤 *Cliente:* ${name}\n`;
     msg += `📅 *Retirada:* ${date}\n`;
     msg += `💳 *Pagamento (retirada):* ${payment}\n\n`;
-    msg += `━━━━━━━━━━━━━━━\n`;
 
     items.forEach((item, i) => {
       if (item.type === 'cake') {
-        msg += `${i + 1}. ${item.summary}\n`;
+        msg += `${i + 1}. ${item.summary}\n\n`;
       } else {
-        msg += `${i + 1}. ${item.category} — ${item.name} | ${item.quantity}un × ${formatBRL(item.pricePerUnit)} = ${formatBRL(item.total)}\n`;
+        msg += `${i + 1}. ${item.category} — ${item.name} | ${item.quantity}un × ${formatBRL(item.pricePerUnit)} = ${formatBRL(item.total)}\n\n`;
       }
     });
 
@@ -60,15 +59,17 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto rounded-t-2xl">
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
-          <SheetTitle className="font-display text-2xl text-primary">Seu Pedido</SheetTitle>
+          <SheetTitle className="font-display text-2xl text-primary flex items-center gap-2">
+            <ShoppingBag className="w-5 h-5" />
+            Seu Pedido
+          </SheetTitle>
         </SheetHeader>
 
         <div className="space-y-4 mt-4">
-          {/* Items */}
           {items.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">Seu carrinho está vazio</p>
+            <p className="text-muted-foreground text-center py-12">Seu carrinho está vazio</p>
           ) : (
             <div className="space-y-2">
               {items.map((item) => (
@@ -87,14 +88,13 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
                   </button>
                 </div>
               ))}
-              <div className="flex justify-between font-bold text-primary pt-2 border-t">
+              <div className="flex justify-between font-bold text-primary text-lg pt-2 border-t">
                 <span>Total</span>
                 <span>{formatBRL(total)}</span>
               </div>
             </div>
           )}
 
-          {/* Form */}
           {items.length > 0 && (
             <div className="space-y-3 pt-2">
               <div>
@@ -106,9 +106,9 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium">Data de Retirada</Label>
+                <Label className="text-sm font-medium">Data / Hora de Retirada</Label>
                 <Input
-                  type="date"
+                  type="datetime-local"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                 />
@@ -120,7 +120,7 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
                     <button
                       key={p}
                       onClick={() => setPayment(p)}
-                      className={`rounded-lg border p-2 text-sm transition-all ${
+                      className={`rounded-full border p-2 text-sm transition-all ${
                         payment === p
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-card hover:border-primary/50'
@@ -135,11 +135,11 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
               <Button
                 onClick={handleSend}
                 disabled={!canSubmit}
-                className="w-full gap-2"
+                className="w-full gap-2 rounded-full"
                 size="lg"
               >
                 <Send className="w-4 h-4" />
-                Enviar pelo WhatsApp
+                Finalizar no WhatsApp
               </Button>
             </div>
           )}

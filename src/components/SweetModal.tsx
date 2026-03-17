@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SWEET_CATEGORIES } from '@/data/menu-data';
 import { Plus, Minus } from 'lucide-react';
+import type { SweetCategory } from '@/data/menu-data';
 import type { CartSweetItem } from '@/hooks/useCart';
 
 interface Props {
+  open: boolean;
+  onClose: () => void;
+  category: SweetCategory | null;
+  image: string;
   onAdd: (item: Omit<CartSweetItem, 'id'>) => void;
 }
 
@@ -13,22 +18,25 @@ function formatBRL(v: number) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-export default function SweetsSection({ onAdd }: Props) {
+export default function SweetModal({ open, onClose, category, image, onAdd }: Props) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-  const getKey = (cat: string, name: string) => `${cat}|${name}`;
+  useEffect(() => {
+    if (open) setQuantities({});
+  }, [open]);
 
-  const setQty = (key: string, val: number, min: number) => {
+  if (!category) return null;
+
+  const setQty = (name: string, val: number, min: number) => {
     const clamped = Math.max(min, Math.round(val));
-    setQuantities((prev) => ({ ...prev, [key]: clamped }));
+    setQuantities((prev) => ({ ...prev, [name]: clamped }));
   };
 
-  const handleAdd = (cat: string, name: string, pricePerUnit: number, minQty: number) => {
-    const key = getKey(cat, name);
-    const qty = quantities[key] || minQty;
+  const handleAdd = (name: string, pricePerUnit: number, minQty: number) => {
+    const qty = quantities[name] || minQty;
     onAdd({
       type: 'sweet',
-      category: cat,
+      category: category.name,
       name,
       quantity: qty,
       pricePerUnit,
@@ -36,39 +44,48 @@ export default function SweetsSection({ onAdd }: Props) {
     });
     setQuantities((prev) => {
       const next = { ...prev };
-      delete next[key];
+      delete next[name];
       return next;
     });
   };
 
   return (
-    <div className="space-y-6">
-      {SWEET_CATEGORIES.map((cat) => (
-        <div key={cat.name}>
-          <h3 className="font-display text-xl text-primary mb-3">{cat.name}</h3>
-          <div className="space-y-2">
-            {cat.items.map((item) => {
-              const key = getKey(cat.name, item.name);
-              const qty = quantities[key];
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto p-0">
+        <div className="aspect-[16/9] overflow-hidden rounded-t-lg">
+          <img src={image} alt={category.name} className="w-full h-full object-cover" />
+        </div>
+
+        <div className="p-5">
+          <DialogHeader>
+            <DialogTitle className="font-display text-2xl text-primary">
+              {category.name}
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-xs text-muted-foreground mb-4">
+            Pedido mínimo de 25 unidades por sabor
+          </p>
+
+          <div className="space-y-3">
+            {category.items.map((item) => {
+              const qty = quantities[item.name];
               const isOpen = qty !== undefined;
 
               return (
-                <div
-                  key={item.name}
-                  className="bg-card rounded-lg border p-3"
-                >
+                <div key={item.name} className="bg-secondary/50 rounded-lg p-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-sm">{item.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {formatBRL(item.pricePerUnit)}/un • mín. {item.minQuantity} un
+                        {formatBRL(item.pricePerUnit)}/un • mín. {item.minQuantity}un
                       </p>
                     </div>
                     {!isOpen ? (
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => setQty(key, item.minQuantity, item.minQuantity)}
+                        onClick={() => setQty(item.name, item.minQuantity, item.minQuantity)}
+                        className="rounded-full"
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
@@ -77,16 +94,16 @@ export default function SweetsSection({ onAdd }: Props) {
                         <Button
                           size="icon"
                           variant="outline"
-                          className="h-8 w-8"
+                          className="h-8 w-8 rounded-full"
                           onClick={() => {
                             if (qty <= item.minQuantity) {
                               setQuantities((prev) => {
                                 const next = { ...prev };
-                                delete next[key];
+                                delete next[item.name];
                                 return next;
                               });
                             } else {
-                              setQty(key, qty - item.minQuantity, item.minQuantity);
+                              setQty(item.name, qty - item.minQuantity, item.minQuantity);
                             }
                           }}
                         >
@@ -95,7 +112,7 @@ export default function SweetsSection({ onAdd }: Props) {
                         <Input
                           type="number"
                           value={qty}
-                          onChange={(e) => setQty(key, Number(e.target.value), item.minQuantity)}
+                          onChange={(e) => setQty(item.name, Number(e.target.value), item.minQuantity)}
                           className="w-16 h-8 text-center text-sm"
                           min={item.minQuantity}
                           step={item.minQuantity}
@@ -103,8 +120,8 @@ export default function SweetsSection({ onAdd }: Props) {
                         <Button
                           size="icon"
                           variant="outline"
-                          className="h-8 w-8"
-                          onClick={() => setQty(key, qty + item.minQuantity, item.minQuantity)}
+                          className="h-8 w-8 rounded-full"
+                          onClick={() => setQty(item.name, qty + item.minQuantity, item.minQuantity)}
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
@@ -113,12 +130,13 @@ export default function SweetsSection({ onAdd }: Props) {
                   </div>
                   {isOpen && (
                     <div className="mt-2 flex items-center justify-between">
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-semibold text-primary">
                         {formatBRL(qty * item.pricePerUnit)}
                       </span>
                       <Button
                         size="sm"
-                        onClick={() => handleAdd(cat.name, item.name, item.pricePerUnit, item.minQuantity)}
+                        className="rounded-full"
+                        onClick={() => handleAdd(item.name, item.pricePerUnit, item.minQuantity)}
                       >
                         Adicionar
                       </Button>
@@ -129,7 +147,7 @@ export default function SweetsSection({ onAdd }: Props) {
             })}
           </div>
         </div>
-      ))}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

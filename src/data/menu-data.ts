@@ -16,14 +16,25 @@ export interface SweetCategory {
   items: SweetItem[];
 }
 
+export interface ProductCard {
+  id: string;
+  name: string;
+  description: string;
+  priceLabel: string;
+  image: string;
+  category: 'bolos' | 'doces-finos' | 'brigadeiros';
+  modalType: 'cake-traditional' | 'cake-acetate' | 'sweet';
+  sweetCategoryIndex?: number; // for sweets, index into SWEET_CATEGORIES
+}
+
 export const WEIGHTS = [1.3, 1.5, 2, 3, 4] as const;
 
 export const WEIGHT_SERVINGS: Record<number, string> = {
-  1.3: '6-8 fatias',
-  1.5: '10-12 fatias',
-  2: '16-17 fatias',
-  3: '18-25 fatias',
-  4: '26-38 fatias',
+  1.3: '6–8 fatias',
+  1.5: '10–12 fatias',
+  2: '16–17 fatias',
+  3: '18–25 fatias',
+  4: '26–38 fatias',
 };
 
 export const MASSES = ['Baunilha', 'Chocolate'] as const;
@@ -122,12 +133,71 @@ export const SWEET_CATEGORIES: SweetCategory[] = [
 
 export type CakeType = 'traditional' | 'acetate';
 
-export const CAKE_CATEGORIES = [
-  { id: 'traditional' as CakeType, name: 'Bolos Tradicionais / Especiais / Premium' },
-  { id: 'acetate' as CakeType, name: 'Bolo no Acetato' },
+// Product cards for the vitrine grid
+export const PRODUCT_CARDS: ProductCard[] = [
+  {
+    id: 'bolo-personalizado',
+    name: 'Bolo Personalizado',
+    description: 'Escolha recheios Tradicionais, Especiais ou Premium. Massa de baunilha ou chocolate com cobertura à sua escolha.',
+    priceLabel: 'A partir de R$ 70,00/kg',
+    image: 'card-bolo',
+    category: 'bolos',
+    modalType: 'cake-traditional',
+  },
+  {
+    id: 'bolo-acetato',
+    name: 'Bolo no Acetato',
+    description: 'Camadas generosas de creme e chocolate envoltas em acetato transparente. Opção de Nutella.',
+    priceLabel: 'R$ 110,00/kg',
+    image: 'card-acetato',
+    category: 'bolos',
+    modalType: 'cake-acetate',
+  },
+  {
+    id: 'brigadeiros-tradicionais',
+    name: 'Brigadeiros Tradicionais',
+    description: 'Ninho, Beijinho, Dois Amores e Brigadeiro Tradicional. Pedido mínimo de 25 unidades por sabor.',
+    priceLabel: 'R$ 1,70 / unidade',
+    image: 'card-brigadeiros',
+    category: 'brigadeiros',
+    modalType: 'sweet',
+    sweetCategoryIndex: 0,
+  },
+  {
+    id: 'brigadeiros-especiais',
+    name: 'Brigadeiros Especiais',
+    description: 'Churros, Olho de Sogra, Ferrero, Ninho com Nutella e Mini Brownies. Mín. 25un por sabor.',
+    priceLabel: 'R$ 1,90 / unidade',
+    image: 'card-brigadeiros',
+    category: 'brigadeiros',
+    modalType: 'sweet',
+    sweetCategoryIndex: 1,
+  },
+  {
+    id: 'mini-trufas',
+    name: 'Mini Trufas',
+    description: 'Brigadeiro, Cocada Cremosa, Nozes e Ninho. Irresistíveis em qualquer ocasião. Mín. 25un por sabor.',
+    priceLabel: 'R$ 2,80 / unidade',
+    image: 'card-trufas',
+    category: 'brigadeiros',
+    modalType: 'sweet',
+    sweetCategoryIndex: 2,
+  },
+  {
+    id: 'doces-finos',
+    name: 'Doces Finos',
+    description: 'Galícias, Camafeu de Nozes e Bombons de Nutte. Elegância e sofisticação. Mín. 25un por sabor.',
+    priceLabel: 'R$ 3,20 / unidade',
+    image: 'card-doces-finos',
+    category: 'doces-finos',
+    modalType: 'sweet',
+    sweetCategoryIndex: 3,
+  },
 ];
 
-export const MENU_CATEGORIES = [
-  { id: 'cakes', name: 'Bolos' },
-  { id: 'sweets', name: 'Doces' },
+export const VITRINE_FILTERS = [
+  { id: 'todos', label: 'Todos' },
+  { id: 'bolos', label: 'Bolos' },
+  { id: 'doces-finos', label: 'Doces Finos' },
+  { id: 'brigadeiros', label: 'Brigadeiros' },
 ];

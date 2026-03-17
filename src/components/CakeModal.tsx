@@ -23,6 +23,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   cakeType: CakeType;
+  image: string;
   onAdd: (config: CakeConfig, summary: string, total: number) => void;
 }
 
@@ -30,7 +31,7 @@ function formatBRL(v: number) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
+export default function CakeModal({ open, onClose, cakeType, image, onAdd }: Props) {
   const [weight, setWeight] = useState<number>(0);
   const [mass, setMass] = useState('');
   const [fillings, setFillings] = useState<string[]>([]);
@@ -74,8 +75,6 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
   const breakdown = config ? calculateCakePrice(config) : null;
 
-  const canSubmit = !!breakdown;
-
   const handleSubmit = () => {
     if (!config || !breakdown) return;
 
@@ -105,17 +104,26 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-display text-2xl text-primary">
-            {isAcetate ? '🍫 Bolo no Acetato' : '🎂 Monte seu Bolo'}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto p-0">
+        {/* Product image header */}
+        <div className="aspect-[16/9] overflow-hidden rounded-t-lg">
+          <img
+            src={image}
+            alt={isAcetate ? 'Bolo no Acetato' : 'Bolo Personalizado'}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-        <div className="space-y-5">
+        <div className="p-5 space-y-5">
+          <DialogHeader>
+            <DialogTitle className="font-display text-2xl text-primary">
+              {isAcetate ? 'Bolo no Acetato' : 'Monte seu Bolo'}
+            </DialogTitle>
+          </DialogHeader>
+
           {/* Step 1: Weight */}
           <div>
-            <h4 className="font-semibold text-sm mb-2">1. Tamanho / Peso *</h4>
+            <h4 className="font-semibold text-sm mb-2">1. Tamanho / Peso <span className="text-primary">*</span></h4>
             <div className="grid grid-cols-3 gap-2">
               {WEIGHTS.map((w) => (
                 <button
@@ -124,7 +132,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                   className={cn(
                     'rounded-lg border p-3 text-center transition-all text-sm',
                     weight === w
-                      ? 'bg-primary text-primary-foreground border-primary shadow'
+                      ? 'bg-primary text-primary-foreground border-primary shadow-md'
                       : 'bg-card hover:border-primary/50'
                   )}
                 >
@@ -137,7 +145,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
           {/* Step 2: Mass */}
           <div>
-            <h4 className="font-semibold text-sm mb-2">2. Massa *</h4>
+            <h4 className="font-semibold text-sm mb-2">2. Massa <span className="text-primary">*</span></h4>
             <div className="flex gap-2">
               {MASSES.map((m) => (
                 <button
@@ -146,7 +154,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                   className={cn(
                     'flex-1 rounded-lg border p-3 text-center text-sm transition-all',
                     mass === m
-                      ? 'bg-primary text-primary-foreground border-primary shadow'
+                      ? 'bg-primary text-primary-foreground border-primary shadow-md'
                       : 'bg-card hover:border-primary/50'
                   )}
                 >
@@ -157,7 +165,6 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
           </div>
 
           {isAcetate ? (
-            /* Acetate: Nutella option */
             <div>
               <h4 className="font-semibold text-sm mb-2">3. Adicional</h4>
               <p className="text-xs text-muted-foreground mb-2">Base: {formatBRL(ACETATE_BASE_PRICE)}/kg</p>
@@ -170,7 +177,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
             <>
               {/* Step 3: Fillings */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">3. Recheios * (até 2)</h4>
+                <h4 className="font-semibold text-sm mb-2">3. Recheios <span className="text-primary">*</span> (até 2)</h4>
                 {(['traditional', 'special', 'premium'] as FillingTier[]).map((tier) => (
                   <div key={tier} className="mb-3">
                     <Badge variant="secondary" className="mb-1.5 text-xs">
@@ -197,9 +204,9 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                 ))}
               </div>
 
-              {/* Step 4: Filling extras */}
+              {/* Step 4: Extras */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">4. Adicionais no Recheio (opcional)</h4>
+                <h4 className="font-semibold text-sm mb-2">4. Adicionais no Recheio</h4>
                 <div className="space-y-2">
                   {FILLING_EXTRAS.map((e) => (
                     <label key={e.name} className="flex items-center gap-2 cursor-pointer">
@@ -215,7 +222,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
               {/* Step 5: Topping */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">5. Cobertura *</h4>
+                <h4 className="font-semibold text-sm mb-2">5. Cobertura <span className="text-primary">*</span></h4>
                 <div className="flex gap-2">
                   {TOPPINGS.map((t) => (
                     <button
@@ -224,7 +231,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                       className={cn(
                         'flex-1 rounded-lg border p-3 text-center text-sm transition-all',
                         topping === t.name
-                          ? 'bg-primary text-primary-foreground border-primary shadow'
+                          ? 'bg-primary text-primary-foreground border-primary shadow-md'
                           : 'bg-card hover:border-primary/50'
                       )}
                     >
@@ -239,14 +246,14 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
               {/* Step 6: Topper */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">6. Topo Temático (opcional)</h4>
+                <h4 className="font-semibold text-sm mb-2">6. Topo Temático</h4>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCakeTopper(null)}
                     className={cn(
                       'flex-1 rounded-lg border p-3 text-center text-sm transition-all',
                       cakeTopper === null
-                        ? 'bg-primary text-primary-foreground border-primary shadow'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-md'
                         : 'bg-card hover:border-primary/50'
                     )}
                   >
@@ -259,7 +266,7 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                       className={cn(
                         'flex-1 rounded-lg border p-3 text-center text-sm transition-all',
                         cakeTopper === ct.name
-                          ? 'bg-primary text-primary-foreground border-primary shadow'
+                          ? 'bg-primary text-primary-foreground border-primary shadow-md'
                           : 'bg-card hover:border-primary/50'
                       )}
                     >
@@ -297,8 +304,8 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
                   <span>{formatBRL(breakdown.topperPrice)}</span>
                 </div>
               )}
-              <div className="border-t pt-2 flex justify-between font-bold text-primary">
-                <span>Total</span>
+              <div className="border-t pt-2 flex justify-between font-bold text-primary text-base">
+                <span>Total Estimado</span>
                 <span>{formatBRL(breakdown.total)}</span>
               </div>
             </div>
@@ -306,8 +313,8 @@ export default function CakeModal({ open, onClose, cakeType, onAdd }: Props) {
 
           <Button
             onClick={handleSubmit}
-            disabled={!canSubmit}
-            className="w-full"
+            disabled={!breakdown}
+            className="w-full rounded-full"
             size="lg"
           >
             Adicionar ao Pedido

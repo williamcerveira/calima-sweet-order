@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 355 100% 98%;
+    --background: 40 33% 97%;
     --foreground: 0 0% 20%;
 
     --card: 0 0% 100%;
@@ -15,29 +15,33 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 20%;
 
-    --primary: 357 45% 62%;
+    --primary: 355 40% 62%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 355 60% 95%;
-    --secondary-foreground: 357 45% 50%;
+    --secondary: 355 40% 95%;
+    --secondary-foreground: 355 40% 45%;
 
-    --muted: 355 30% 94%;
+    --muted: 30 15% 93%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 357 45% 55%;
+    --accent: 355 40% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 355 25% 88%;
-    --input: 355 25% 88%;
-    --ring: 357 45% 62%;
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 355 40% 62%;
 
     --radius: 0.75rem;
 
-    --font-display: 'Dancing Script', cursive;
+    --font-display: 'Great Vibes', cursive;
     --font-body: 'Montserrat', sans-serif;
+
+    --dark: 0 0% 15%;
+    --dark-foreground: 0 0% 90%;
+    --gold: 38 60% 55%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -56,6 +60,9 @@
   }
   body {
     @apply bg-background text-foreground font-body;
+  }
+  html {
+    scroll-behavior: smooth;
   }
 }
 
