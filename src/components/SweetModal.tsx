@@ -52,19 +52,22 @@ export default function SweetModal({ open, onClose, category, image, onAdd }: Pr
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto p-0">
-        <div className="aspect-[16/9] overflow-hidden rounded-t-lg">
+        <div className="relative aspect-[16/9] overflow-hidden rounded-t-lg">
           <img src={image} alt={category.name} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-5">
+            <DialogHeader>
+              <DialogTitle className="font-display text-2xl text-white drop-shadow-lg">
+                {category.name}
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-xs text-white/80 mt-1">
+              Pedido mínimo de 25 unidades por sabor
+            </p>
+          </div>
         </div>
 
         <div className="p-5">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl text-primary">
-              {category.name}
-            </DialogTitle>
-          </DialogHeader>
-          <p className="text-xs text-muted-foreground mb-4">
-            Pedido mínimo de 25 unidades por sabor
-          </p>
 
           <div className="space-y-3">
             {category.items.map((item) => {

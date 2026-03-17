@@ -104,22 +104,26 @@ export default function CakeModal({ open, onClose, cakeType, image, onAdd }: Pro
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto p-0">
-        {/* Product image header */}
-        <div className="aspect-[16/9] overflow-hidden rounded-t-lg">
+      <DialogContent className="max-w-md max-h-[90vh] flex flex-col p-0">
+        {/* Product image header - fixed, does not scroll */}
+        <div className="relative shrink-0 h-48 overflow-hidden rounded-t-lg">
           <img
             src={image}
             alt={isAcetate ? 'Bolo no Acetato' : 'Bolo Personalizado'}
             className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-5">
+            <DialogHeader>
+              <DialogTitle className="font-display text-2xl text-white drop-shadow-lg">
+                {isAcetate ? 'Bolo no Acetato' : 'Monte seu Bolo'}
+              </DialogTitle>
+            </DialogHeader>
+          </div>
         </div>
 
-        <div className="p-5 space-y-5">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl text-primary">
-              {isAcetate ? 'Bolo no Acetato' : 'Monte seu Bolo'}
-            </DialogTitle>
-          </DialogHeader>
+        {/* Scrollable content area */}
+        <div className="p-5 space-y-5 overflow-y-auto">
 
           {/* Step 1: Weight */}
           <div>

@@ -29,30 +29,43 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
   const canSubmit = name.trim() && date && payment && items.length > 0;
 
   const buildMessage = () => {
-    let msg = `Olá Ana! Quero fazer uma encomenda:\n\n`;
-    msg += `👤 *Cliente:* ${name}\n`;
-    msg += `📅 *Retirada:* ${date}\n`;
-    msg += `💳 *Pagamento (retirada):* ${payment}\n\n`;
+    const lines: string[] = [];
+    lines.push('Ola Ana! Quero fazer uma encomenda:');
+    lines.push('');
+    lines.push(`*Cliente:* ${name}`);
+    lines.push(`*Retirada:* ${date}`);
+    lines.push(`*Pagamento (retirada):* ${payment}`);
+    lines.push('');
 
     items.forEach((item, i) => {
       if (item.type === 'cake') {
-        msg += `${i + 1}. ${item.summary}\n\n`;
+        lines.push(`${i + 1}. ${item.summary}`);
       } else {
-        msg += `${i + 1}. ${item.category} — ${item.name} | ${item.quantity}un × ${formatBRL(item.pricePerUnit)} = ${formatBRL(item.total)}\n\n`;
+        lines.push(`${i + 1}. ${item.category} - ${item.name} | ${item.quantity}un x ${formatBRL(item.pricePerUnit)} = ${formatBRL(item.total)}`);
       }
+      lines.push('');
     });
 
-    msg += `━━━━━━━━━━━━━━━\n`;
-    msg += `💰 *TOTAL: ${formatBRL(total)}*\n`;
-    msg += `💰 *Sinal (50%): ${formatBRL(total / 2)}*\n\n`;
-    msg += `Chave PIX: 34 99220-5504 (Nubank - Ana Caroline Lima)`;
+    lines.push('---------------');
+    lines.push(`*TOTAL: ${formatBRL(total)}*`);
+    lines.push(`*Sinal (50%): ${formatBRL(total / 2)}*`);
+    lines.push('');
+    lines.push('Chave PIX: 34 99220-5504 (Nubank - Ana Caroline Lima)');
 
-    return msg;
+    return lines.join('\n');
   };
 
   const handleSend = () => {
-    const msg = encodeURIComponent(buildMessage());
-    window.open(`https://wa.me/5534992205504?text=${msg}`, '_blank');
+    const message = buildMessage();
+    const encoded = encodeURIComponent(message);
+    const url = `https://wa.me/5534992205504?text=${encoded}`;
+    
+    // Try window.open first, fallback to location.href
+    const win = window.open(url, '_blank');
+    if (!win) {
+      window.location.href = url;
+    }
+    
     onClear();
     onClose();
   };
