@@ -16,14 +16,21 @@ export interface SweetCategory {
   items: SweetItem[];
 }
 
+export interface EasterEggOption {
+  name: string;
+  description: string;
+  weight: string;
+  price: number;
+}
+
 export interface ProductCard {
   id: string;
   name: string;
   description: string;
   priceLabel: string;
   image: string;
-  category: 'bolos' | 'doces-finos' | 'brigadeiros';
-  modalType: 'cake-traditional' | 'cake-acetate' | 'sweet';
+  category: 'bolos' | 'doces-finos' | 'brigadeiros' | 'ovos-pascoa';
+  modalType: 'cake-traditional' | 'cake-acetate' | 'sweet' | 'easter-egg';
   sweetCategoryIndex?: number; // for sweets, index into SWEET_CATEGORIES
 }
 
@@ -88,6 +95,28 @@ export const CAKE_TOPPERS = [
 
 export const ACETATE_BASE_PRICE = 110;
 export const ACETATE_NUTELLA_EXTRA = 12;
+export const PACKAGING_FEE = 10;
+
+export const EASTER_EGG_OPTIONS: EasterEggOption[] = [
+  {
+    name: 'Ovo Trufado Tradicional',
+    description: 'Chocolate ao leite recheado com brigadeiro cremoso',
+    weight: '250g',
+    price: 35,
+  },
+  {
+    name: 'Ovo Trufado Especial',
+    description: 'Chocolate meio amargo com recheio de Ninho com Nutella',
+    weight: '350g',
+    price: 55,
+  },
+  {
+    name: 'Ovo Trufado Premium',
+    description: 'Chocolate belga com mousse de Ferrero Rocher e avelãs',
+    weight: '500g',
+    price: 85,
+  },
+];
 
 export const SWEET_CATEGORIES: SweetCategory[] = [
   {
@@ -193,11 +222,21 @@ export const PRODUCT_CARDS: ProductCard[] = [
     modalType: 'sweet',
     sweetCategoryIndex: 3,
   },
+  {
+    id: 'ovos-pascoa',
+    name: 'Ovos de Páscoa',
+    description: 'Ovos trufados artesanais com recheios irresistíveis. Tradicional, Especial e Premium.',
+    priceLabel: 'A partir de R$ 35,00',
+    image: 'card-ovos-pascoa',
+    category: 'ovos-pascoa',
+    modalType: 'easter-egg',
+  },
 ];
 
 export const VITRINE_FILTERS = [
   { id: 'todos', label: 'Todos' },
   { id: 'bolos', label: 'Bolos' },
+  { id: 'ovos-pascoa', label: '🥚 Páscoa' },
   { id: 'doces-finos', label: 'Doces Finos' },
   { id: 'brigadeiros', label: 'Brigadeiros' },
 ];

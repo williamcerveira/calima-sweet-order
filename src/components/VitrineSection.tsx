@@ -7,6 +7,7 @@ import cardAcetato from '@/assets/card-acetato.jpg';
 import cardBrigadeiros from '@/assets/card-brigadeiros.jpg';
 import cardDocesFinos from '@/assets/card-doces-finos.jpg';
 import cardTrufas from '@/assets/card-trufas.jpg';
+import cardOvosPascoa from '@/assets/card-ovos-pascoa.png';
 
 const IMAGE_MAP: Record<string, string> = {
   'card-bolo': cardBolo,
@@ -14,6 +15,7 @@ const IMAGE_MAP: Record<string, string> = {
   'card-brigadeiros': cardBrigadeiros,
   'card-doces-finos': cardDocesFinos,
   'card-trufas': cardTrufas,
+  'card-ovos-pascoa': cardOvosPascoa,
 };
 
 interface Props {

@@ -40,6 +40,8 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
     items.forEach((item, i) => {
       if (item.type === 'cake') {
         lines.push(`${i + 1}. ${item.summary}`);
+      } else if (item.type === 'easter-egg') {
+        lines.push(`${i + 1}. Ovo de Páscoa - ${item.name} (${item.weight}) | ${item.quantity}un x ${formatBRL(item.price)} = ${formatBRL(item.total)}`);
       } else {
         lines.push(`${i + 1}. ${item.category} - ${item.name} | ${item.quantity}un x ${formatBRL(item.pricePerUnit)} = ${formatBRL(item.total)}`);
       }
@@ -90,6 +92,10 @@ export default function CheckoutSheet({ open, onClose, items, total, onRemove, o
                   <div className="flex-1 text-sm">
                     {item.type === 'cake' ? (
                       <p>{item.summary}</p>
+                    ) : item.type === 'easter-egg' ? (
+                      <p>
+                        <strong>{item.name}</strong> ({item.weight}) — {item.quantity}un = {formatBRL(item.total)}
+                      </p>
                     ) : (
                       <p>
                         <strong>{item.name}</strong> ({item.category}) — {item.quantity}un = {formatBRL(item.total)}

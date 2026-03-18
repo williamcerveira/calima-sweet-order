@@ -20,7 +20,17 @@ export interface CartSweetItem {
   total: number;
 }
 
-export type CartItem = CartCakeItem | CartSweetItem;
+export interface CartEasterEggItem {
+  id: string;
+  type: 'easter-egg';
+  name: string;
+  weight: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export type CartItem = CartCakeItem | CartSweetItem | CartEasterEggItem;
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);

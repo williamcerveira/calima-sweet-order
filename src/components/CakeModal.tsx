@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -95,6 +96,7 @@ export default function CakeModal({ open, onClose, cakeType, image, onAdd }: Pro
       summary += ` | Cobertura: ${topping}`;
       if (breakdown.toppingPerKg > 0) summary += ` (+R$ ${breakdown.toppingPerKg}/kg)`;
       if (cakeTopper) summary += ` | Topo: ${cakeTopper} (+${formatBRL(breakdown.topperPrice)})`;
+      if (breakdown.packagingFee > 0) summary += ` | Embalagem: +${formatBRL(breakdown.packagingFee)}`;
       summary += ` | Total: ${formatBRL(breakdown.total)}`;
     }
 
@@ -146,6 +148,14 @@ export default function CakeModal({ open, onClose, cakeType, image, onAdd }: Pro
               ))}
             </div>
           </div>
+          {weight >= 3 && (
+            <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800">
+              <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+              <p className="text-xs leading-relaxed">
+                Bolos a partir de 3kg possuem uma <strong>taxa de embalagem de R$ 10,00</strong> que será adicionada ao valor total.
+              </p>
+            </div>
+          )}
 
           {/* Step 2: Mass */}
           <div>
@@ -306,6 +316,12 @@ export default function CakeModal({ open, onClose, cakeType, image, onAdd }: Pro
                 <div className="flex justify-between">
                   <span>Topo temático</span>
                   <span>{formatBRL(breakdown.topperPrice)}</span>
+                </div>
+              )}
+              {breakdown.packagingFee > 0 && (
+                <div className="flex justify-between text-amber-700">
+                  <span>Embalagem (≥ 3kg)</span>
+                  <span>{formatBRL(breakdown.packagingFee)}</span>
                 </div>
               )}
               <div className="border-t pt-2 flex justify-between font-bold text-primary text-base">

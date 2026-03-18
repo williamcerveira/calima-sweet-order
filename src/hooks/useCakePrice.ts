@@ -5,6 +5,7 @@ import {
   FILLINGS,
   ACETATE_BASE_PRICE,
   ACETATE_NUTELLA_EXTRA,
+  PACKAGING_FEE,
   type CakeType,
 } from '@/data/menu-data';
 
@@ -26,11 +27,14 @@ export interface PriceBreakdown {
   totalPerKg: number;
   subtotalKg: number;
   topperPrice: number;
+  packagingFee: number;
   total: number;
   highestTier: FillingTier;
 }
 
 export function calculateCakePrice(config: CakeConfig): PriceBreakdown {
+  const packagingFee = config.weight >= 3 ? PACKAGING_FEE : 0;
+
   if (config.type === 'acetate') {
     const basePerKg = ACETATE_BASE_PRICE;
     const nutellaExtra = config.addNutella ? ACETATE_NUTELLA_EXTRA : 0;
@@ -43,7 +47,8 @@ export function calculateCakePrice(config: CakeConfig): PriceBreakdown {
       totalPerKg,
       subtotalKg,
       topperPrice: 0,
-      total: subtotalKg,
+      packagingFee,
+      total: subtotalKg + packagingFee,
       highestTier: 'premium',
     };
   }
@@ -73,7 +78,7 @@ export function calculateCakePrice(config: CakeConfig): PriceBreakdown {
   if (config.cakeTopper === 'Simples') topperPrice = 22;
   if (config.cakeTopper === 'Em Camadas / Laminado') topperPrice = 35;
 
-  const total = subtotalKg + topperPrice;
+  const total = subtotalKg + topperPrice + packagingFee;
 
   return {
     basePerKg,
@@ -82,6 +87,7 @@ export function calculateCakePrice(config: CakeConfig): PriceBreakdown {
     totalPerKg,
     subtotalKg,
     topperPrice,
+    packagingFee,
     total,
     highestTier,
   };

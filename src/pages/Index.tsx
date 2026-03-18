@@ -6,9 +6,11 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import Footer from '@/components/Footer';
 import CakeModal from '@/components/CakeModal';
 import SweetModal from '@/components/SweetModal';
+import EasterEggModal from '@/components/EasterEggModal';
+import EasterPopup from '@/components/EasterPopup';
 import FloatingCart from '@/components/FloatingCart';
 import CheckoutSheet from '@/components/CheckoutSheet';
-import { useCart, type CartSweetItem } from '@/hooks/useCart';
+import { useCart, type CartSweetItem, type CartEasterEggItem } from '@/hooks/useCart';
 import type { CakeConfig } from '@/hooks/useCakePrice';
 import type { ProductCard } from '@/data/menu-data';
 import { SWEET_CATEGORIES } from '@/data/menu-data';
@@ -18,6 +20,7 @@ import cardAcetato from '@/assets/card-acetato.jpg';
 import cardBrigadeiros from '@/assets/card-brigadeiros.jpg';
 import cardDocesFinos from '@/assets/card-doces-finos.jpg';
 import cardTrufas from '@/assets/card-trufas.jpg';
+import cardOvosPascoa from '@/assets/card-ovos-pascoa.png';
 
 const IMAGE_MAP: Record<string, string> = {
   'card-bolo': cardBolo,
@@ -25,6 +28,7 @@ const IMAGE_MAP: Record<string, string> = {
   'card-brigadeiros': cardBrigadeiros,
   'card-doces-finos': cardDocesFinos,
   'card-trufas': cardTrufas,
+  'card-ovos-pascoa': cardOvosPascoa,
 };
 
 export default function Index() {
@@ -35,6 +39,9 @@ export default function Index() {
   const [sweetModalOpen, setSweetModalOpen] = useState(false);
   const [sweetCatIndex, setSweetCatIndex] = useState(0);
   const [sweetImage, setSweetImage] = useState('');
+
+  const [easterModalOpen, setEasterModalOpen] = useState(false);
+  const [easterImage, setEasterImage] = useState('');
 
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const cart = useCart();
@@ -54,6 +61,9 @@ export default function Index() {
       setSweetCatIndex(product.sweetCategoryIndex);
       setSweetImage(img);
       setSweetModalOpen(true);
+    } else if (product.modalType === 'easter-egg') {
+      setEasterImage(img);
+      setEasterModalOpen(true);
     }
   };
 
@@ -72,8 +82,13 @@ export default function Index() {
     cart.addItem({ ...item, id: crypto.randomUUID() });
   };
 
+  const handleEasterAdd = (item: Omit<CartEasterEggItem, 'id'>) => {
+    cart.addItem({ ...item, id: crypto.randomUUID() });
+  };
+
   return (
     <div className="min-h-screen font-body">
+      <EasterPopup />
       <HeroSection />
       <InfoSection />
       <VitrineSection onOpenProduct={handleOpenProduct} />
@@ -94,6 +109,13 @@ export default function Index() {
         category={SWEET_CATEGORIES[sweetCatIndex] || null}
         image={sweetImage}
         onAdd={handleSweetAdd}
+      />
+
+      <EasterEggModal
+        open={easterModalOpen}
+        onClose={() => setEasterModalOpen(false)}
+        image={easterImage}
+        onAdd={handleEasterAdd}
       />
 
       <FloatingCart items={cart.items} onClick={() => setCheckoutOpen(true)} />
