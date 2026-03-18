@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import heroImage from '@/assets/hero-cake.jpg';
 import heroEaster from '@/assets/hero-easter.png';
 import heroEasterMobile from '@/assets/hero-easter-mobile.png';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Gift, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const slides = [
@@ -14,7 +14,8 @@ const slides = [
     subtitle: 'Confeitaria Artesanal',
     tagline: 'Momentos únicos, Sabor inesquecível.',
     cta: { label: 'Ver Menu', href: '#menu' },
-    badge: null,
+    badgeLabel: null as string | null,
+    badgeIcon: null as React.ReactNode,
   },
   {
     image: heroEaster,
@@ -22,9 +23,10 @@ const slides = [
     alt: 'Ovos de Páscoa Calima Confeitaria',
     title: 'Páscoa Calima',
     subtitle: 'Ovos Trufados Artesanais',
-    tagline: 'Sabores que encantam nesta Páscoa 🐣',
+    tagline: 'Sabores que encantam nesta Páscoa',
     cta: { label: 'Ver Ovos', href: '#menu' },
-    badge: '🥚 NOVIDADE',
+    badgeLabel: 'NOVIDADE',
+    badgeIcon: <Gift className="w-3.5 h-3.5" /> as React.ReactNode,
   },
 ];
 
@@ -89,9 +91,10 @@ export default function HeroSection() {
           transitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
         )}
       >
-        {slide.badge && (
-          <span className="inline-block bg-amber-400/90 backdrop-blur-sm text-amber-900 text-xs font-bold px-4 py-1.5 rounded-full mb-4 animate-bounce">
-            {slide.badge}
+        {slide.badgeLabel && (
+          <span className="inline-flex items-center gap-1.5 bg-amber-400/90 backdrop-blur-sm text-amber-900 text-xs font-bold px-4 py-1.5 rounded-full mb-4 animate-bounce">
+            {slide.badgeIcon}
+            {slide.badgeLabel}
           </span>
         )}
         <h1 className="font-display text-5xl sm:text-7xl md:text-8xl text-white mb-4 drop-shadow-lg">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X, Egg } from 'lucide-react';
+import { X, Egg, Gift, Sparkles } from 'lucide-react';
 import popupImage from '@/assets/card-ovos-pascoa.png';
 
 const STORAGE_KEY = 'calima-easter-popup-seen';
@@ -65,11 +65,11 @@ export default function EasterPopup() {
         {/* Content */}
         <div className="p-5 pt-3 text-center space-y-3">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Nossos <strong>ovos de Páscoa artesanais</strong> já estão disponíveis! 🐣 Recheios irresistíveis de brigadeiro, Ninho com Nutella e Ferrero Rocher.
+            Nossos <strong>ovos de Páscoa artesanais</strong> já estão disponíveis! <Sparkles className="inline w-3.5 h-3.5 text-amber-500" /> Recheios irresistíveis de brigadeiro, Ninho com Nutella e Ferrero Rocher.
           </p>
           <div className="flex flex-col gap-2">
             <Button onClick={handleViewEggs} className="w-full rounded-full" size="lg">
-              🥚 Ver Ovos de Páscoa
+              <Gift className="w-4 h-4" /> Ver Ovos de Páscoa
             </Button>
             <button
               onClick={handleClose}

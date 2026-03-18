@@ -236,7 +236,7 @@ export const PRODUCT_CARDS: ProductCard[] = [
 export const VITRINE_FILTERS = [
   { id: 'todos', label: 'Todos' },
   { id: 'bolos', label: 'Bolos' },
-  { id: 'ovos-pascoa', label: '🥚 Páscoa' },
+  { id: 'ovos-pascoa', label: 'Páscoa' },
   { id: 'doces-finos', label: 'Doces Finos' },
   { id: 'brigadeiros', label: 'Brigadeiros' },
 ];

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Minus, Egg } from 'lucide-react';
+import { Plus, Minus, Egg, Sparkles } from 'lucide-react';
 import { EASTER_EGG_OPTIONS } from '@/data/menu-data';
 import type { CartEasterEggItem } from '@/hooks/useCart';
 
@@ -60,7 +60,7 @@ export default function EasterEggModal({ open, onClose, image, onAdd }: Props) {
               </DialogTitle>
             </DialogHeader>
             <p className="text-xs text-white/80 mt-1">
-              Ovos trufados artesanais — feitos com amor 🐣
+              Ovos trufados artesanais — feitos com amor <Sparkles className="inline w-3 h-3 ml-1" />
             </p>
           </div>
         </div>
