@@ -20,7 +20,7 @@ import cardAcetato from '@/assets/card-acetato.jpg';
 import cardBrigadeiros from '@/assets/card-brigadeiros.jpg';
 import cardDocesFinos from '@/assets/card-doces-finos.jpg';
 import cardTrufas from '@/assets/card-trufas.jpg';
-import cardOvosPascoa from '@/assets/card-ovos-pascoa.png';
+import cardOvosPascoa from '@/assets/card-ovos-pascoa.jpg';
 
 const IMAGE_MAP: Record<string, string> = {
   'card-bolo': cardBolo,

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { X, Egg, Gift, Sparkles } from 'lucide-react';
-import popupImage from '@/assets/card-ovos-pascoa.png';
+import popupImage from '@/assets/card-ovos-pascoa.jpg';
 
 const STORAGE_KEY = 'calima-easter-popup-seen';
 
